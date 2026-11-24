@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PayWatch — large-transfer watchdog</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; margin: 0; background: #0e1116; color: #e8edf5; }
+    main { max-width: 680px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .sub { color: #9aa8b8; margin-bottom: 24px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, monospace; }
+    pre { background: #171c24; padding: 12px 14px; border-radius: 8px; overflow: auto; }
+    .card { background: #171c24; border: 1px solid #2a3340; border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+    a { color: #8cb4ff; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>PayWatch</h1>
+    <p class="sub">If a watched wallet moves more than your cap, a reactive contract records it. No bot to keep online.</p>
+    <div class="card">
+      <p><strong>Track:</strong> Reactive Omni Buildathon · Set It and Forget It</p>
+      <p><strong>Origin / destination:</strong> Base Sepolia (84532)</p>
+      <p><strong>Reactive chain:</strong> Lasna (5318007)</p>
+      <p>Deployed addresses will appear here after the testnet faucet step.</p>
+    </div>
+    <h2>The loop</h2>
+    <pre>MockUSD.Transfer (Base Sepolia)
+        │
+        ▼
+PayWatchReactive.react (Lasna)
+        │
+        ▼
+AlertBoard.recordAlert (Base Sepolia, via callback proxy)</pre>
+    <p>Source and docs are in the repository README.</p>
+  </main>
+</body>
+</html>
