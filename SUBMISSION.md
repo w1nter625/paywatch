@@ -5,7 +5,7 @@
 - **Track:** Set It and Forget It ($2,000 first / $250 runner-up, paid in REACT)
 - **Deadline:** 2026-12-05 20:00 UTC = **2026-12-06 04:00 SGT**
 - **Team:** solo, Wynnter
-- **Repo:** (public GitHub link, filled in after the repo is created)
+- **Repo:** https://github.com/w1nter625/paywatch
 - **Demo video:** pending (≤ 3 minutes, screen recording + English TTS / captions; no on-camera appearance)
 
 ## Short description
