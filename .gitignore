@@ -6,3 +6,8 @@ broadcast/
 !.env.example
 *.pk
 secrets/
+
+.secrets/
+demo.mp4
+demo.srt
+__pycache__/
