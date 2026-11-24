@@ -46,7 +46,7 @@ NARRATION = [
     (
         "architecture",
         "architecture",
-        "A reactive contract on Lasna watches ERC-20 Transfer logs on Base Sepolia. If a watched wallet sends or receives at or above your cap, it requests a callback.",
+        "A reactive contract on Lasna watches ERC-20 Transfer logs on Ethereum Sepolia. If a watched wallet sends or receives at or above your cap, it requests a callback.",
     ),
     (
         "board",
@@ -61,7 +61,7 @@ NARRATION = [
     (
         "demo",
         "demo",
-        "In the demo, we mint mock dollars and send two hundred and fifty, above a one hundred cap. The board's alert count goes from zero to one: origin transfer, reactive ThresholdHit, then the callback.",
+        "In the live testnet demo, we mint mock dollars and send two hundred and fifty, above a one hundred cap. The origin Transfer and the Lasna ThresholdHit are already on-chain, and the reactive contract has requested the callback.",
     ),
     (
         "close",
@@ -163,12 +163,12 @@ def make_cover() -> None:
     im, d = new_canvas()
     d.text((80, 120), "PAYWATCH", fill=AMBER, font=font(112, bold=True))
     d.text((84, 260), "A personal large-transfer watchdog you can leave running.", fill=WHITE, font=font(36))
-    d.text((84, 330), "Reactive Omni Buildathon  ·  Set It and Forget It  ·  Lasna + Base Sepolia", fill=DIM, font=font(26))
+    d.text((84, 330), "Reactive Omni Buildathon  ·  Set It and Forget It  ·  Lasna + Ethereum Sepolia", fill=DIM, font=font(26))
     # three step chips
     steps = [
-        ("01", "ORIGIN", "MockUSD.Transfer\nBase Sepolia"),
+        ("01", "ORIGIN", "MockUSD.Transfer\nEthereum Sepolia"),
         ("02", "REACTIVE", "PayWatchReactive\nLasna"),
-        ("03", "CALLBACK", "AlertBoard\nBase Sepolia"),
+        ("03", "CALLBACK", "AlertBoard\nEthereum Sepolia"),
     ]
     x = 80
     for num, label, body in steps:
@@ -224,9 +224,9 @@ def frame_architecture() -> Image.Image:
     im, d = new_canvas()
     header(d, "THE LOOP")
     cols = [
-        ("BASE SEPOLIA", "84532", "MockUSD", "Transfer log\nwatched wallet\namount ≥ cap"),
+        ("ETH SEPOLIA", "11155111", "MockUSD", "Transfer log\nwatched wallet\namount ≥ cap"),
         ("LASNA", "5318007", "PayWatchReactive", "react()\nfilter + cooldown\nrequestCallback"),
-        ("BASE SEPOLIA", "84532", "AlertBoard", "recordAlert\nvia callback proxy\nalertCount += 1"),
+        ("ETH SEPOLIA", "11155111", "AlertBoard", "recordAlert\nvia callback proxy\nalertCount += 1"),
     ]
     x = 80
     for i, (chain, cid, contract, body) in enumerate(cols):
@@ -249,8 +249,8 @@ def frame_board() -> Image.Image:
     header(d, "AUTHENTICATION")
     rounded_rect(d, [80, 160, 1840, 900], PANEL, outline=LINE, width=2, radius=24)
     rows = [
-        ("Who may call", "Only the official Base Sepolia callback proxy."),
-        ("Proxy address", "0x476F44b11F5C942c58f4c8E3d0300E5710743585"),
+        ("Who may call", "Only the official Ethereum Sepolia callback proxy."),
+        ("Proxy address", "0xAa14d9Cd0f788Ca23d11805986C1d8bd035D23b4"),
         ("On behalf of", "The authorized PayWatchReactive contract on Lasna."),
         ("What is stored", "Wallet, counterparty, token, amount, direction, origin tx."),
         ("Cooldown", "Seconds via block.timestamp — required on 200 ms Base Sepolia."),
@@ -304,10 +304,10 @@ def frame_demo() -> Image.Image:
     im, d = new_canvas()
     header(d, "DEMO LOOP")
     steps = [
-        ("1", "Mint 1,000 pUSD", "to the watched wallet\non Base Sepolia"),
+        ("1", "Mint 1,000 pUSD", "to the watched wallet\non Ethereum Sepolia"),
         ("2", "Transfer 250 pUSD", "above the 100 cap\nemits Transfer"),
         ("3", "ThresholdHit", "PayWatchReactive\nemits on Lasna"),
-        ("4", "alertCount = 1", "AlertBoard callback\non Base Sepolia"),
+        ("4", "Callback requested", "AlertBoard on\nEthereum Sepolia"),
     ]
     x = 60
     for i, (num, title, body) in enumerate(steps):
@@ -324,8 +324,10 @@ def frame_demo() -> Image.Image:
         if i < 3:
             d.polygon([(x + 436, 470), (x + 468, 496), (x + 436, 522)], fill=AMBER)
         x += 470
-    d.text((80, 860), "Origin Transfer  →  Lasna ThresholdHit  →  AlertBoard.AlertRecorded", fill=CYAN, font=font(28))
-    d.text((80, 920), "Live transaction hashes will be recorded in demo-txs.md after testnet funding.", fill=DIM, font=font(22))
+    d.text((80, 820), "Origin Transfer  →  Lasna ThresholdHit  →  callback requested", fill=CYAN, font=font(26))
+    d.text((80, 870), "Origin   0xc75466d83608d3b1da65d19a9784c14e991e71d9ccffc416c04413a13212786f", fill=WHITE, font=font_mono(18))
+    d.text((80, 910), "Reactive 0x6e069f8117b128096ccb50bd7e06173f4282fc6f714386eefc1297aab9f868f0", fill=WHITE, font=font_mono(18))
+    d.text((80, 950), "Callback pending on the official Sepolia signer  ·  see demo-txs.md", fill=DIM, font=font(20))
     return im
 
 

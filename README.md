@@ -20,7 +20,8 @@ MockUSD.Transfer  ─────────────────► PayWatc
                                                                          (authenticated via proxy)
 ```
 
-- Origin and destination: Base Sepolia (chain ID 84532), callback proxy `0x476F44b11F5C942c58f4c8E3d0300E5710743585`.
+- Live deploy (this repo): Ethereum Sepolia (chain ID 11155111), callback proxy `0xAa14d9Cd0f788Ca23d11805986C1d8bd035D23b4`.
+- Base Sepolia is also supported (`ORIGIN=base`); callback proxy `0x476F44b11F5C942c58f4c8E3d0300E5710743585`.
 - Reactive chain: Lasna (chain ID 5318007), system contract `0x8888…8888`.
 - Cooldown is in **seconds** (`block.timestamp`), not block counts, as required for fast testnets.
 - `AlertBoard` accepts calls only from the callback proxy, and only when the injected sender is the authorized reactive contract.
@@ -29,13 +30,13 @@ MockUSD.Transfer  ─────────────────► PayWatc
 
 | Contract | Chain | Role |
 |---|---|---|
-| `MockUSD` | Base Sepolia | Demo ERC-20 that emits standard `Transfer` logs |
+| `MockUSD` | Ethereum Sepolia (live) | Demo ERC-20 that emits standard `Transfer` logs |
 | `PayWatchReactive` | Lasna | Subscribes, filters, requests the callback |
-| `AlertBoard` | Base Sepolia | Records the alert |
+| `AlertBoard` | Ethereum Sepolia (live) | Records the alert |
 
 Deployment order follows the official docs: reactive contract first, then the board (it needs the reactive address), then `setBoard` on the reactive contract, then fund both.
 
-Live testnet addresses and the origin → reactive → callback transaction hashes will be listed in `demo-txs.md` after the faucet step below.
+Live testnet addresses and transaction hashes are in [demo-txs.md](demo-txs.md).
 
 ## Tests
 
@@ -58,14 +59,16 @@ Do not send mainnet funds. Do not buy ETH or REACT. Put a **testnet** key in `PR
 
 ```bash
 export PRIVATE_KEY=0x...   # testnet only; prefer .secrets/private_key.txt
-./scripts/request-lreact.sh base 0.01ether   # once you have Base Sepolia ETH
-./scripts/deploy.sh
-./scripts/demo.sh          # mints pUSD, sends 250 (above the 100 cap), then reads alertCount
+./scripts/request-lreact.sh sepolia 0.01ether   # or: base 0.01ether
+./scripts/deploy.sh          # default origin is Ethereum Sepolia; ORIGIN=base for Base Sepolia
+./scripts/demo.sh            # mints pUSD, sends 250 (above the 100 cap), then reads alertCount
 ```
 
-If `forge`/`cast` get HTTP 403 from `https://lasna-rpc.rnk.dev/`, start `python3 scripts/lasna-proxy.py` and set `LASNA_RPC=http://127.0.0.1:8549`.
+`deploy.sh` also calls `depositTo` on the callback proxy so AlertBoard has **reserves**. ETH sent in the constructor is only the contract’s own balance and does not clear proxy debt; any debt blocks callback delivery.
 
-Addresses are written to `broadcast/addresses.env` (gitignored). Record the origin transfer hash and the AlertBoard callback hash in `demo-txs.md` for the DoraHacks submission.
+If `forge`/`cast` get HTTP 403 from `https://lasna-rpc.rnk.dev/`, use `LASNA_RPC=https://reactive-lasna.rpcscan.xyz` (the default) or start `python3 scripts/lasna-proxy.py` and point `LASNA_RPC` at `http://127.0.0.1:8549`.
+
+Addresses are written to `broadcast/addresses.env` (gitignored). The live hashes for the DoraHacks submission are in `demo-txs.md`.
 
 ## License
 

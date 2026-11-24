@@ -10,5 +10,6 @@ optimizer_runs = 200
 fs_permissions = [{ access = "read", path = "./"}]
 
 [rpc_endpoints]
-lasna = "https://lasna-rpc.rnk.dev/"
+lasna = "https://reactive-lasna.rpcscan.xyz"
 base_sepolia = "https://sepolia.base.org"
+sepolia = "https://ethereum-sepolia.publicnode.com"
