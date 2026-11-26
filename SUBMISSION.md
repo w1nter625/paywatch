@@ -27,7 +27,7 @@ A personal large-transfer watchdog you can leave running: if a watched wallet mo
 https://github.com/w1nter625/paywatch
 
 ### Demo video
-https://cdn.jsdelivr.net/gh/w1nter625/paywatch@5341053/demo.mp4
+https://cdn.jsdelivr.net/gh/w1nter625/paywatch@c32c9c2fcf56e26a63a7da069b1b86c33b4246ee/demo.mp4
 
 Branch alias (may lag jsDelivr cache for a few minutes): https://cdn.jsdelivr.net/gh/w1nter625/paywatch@gh-pages/demo.mp4
 
@@ -105,7 +105,7 @@ Inferred from DoraHacks public docs (default BUIDL form) and from this event’s
 | Tagline / one-liner | Yes | The one-line description above |
 | Track | Yes | Set It and Forget It |
 | GitHub / public repo | Yes | https://github.com/w1nter625/paywatch |
-| Demo video URL | Yes | https://cdn.jsdelivr.net/gh/w1nter625/paywatch@5341053/demo.mp4 (branch alias may lag: https://cdn.jsdelivr.net/gh/w1nter625/paywatch@gh-pages/demo.mp4) |
+| Demo video URL | Yes | https://cdn.jsdelivr.net/gh/w1nter625/paywatch@c32c9c2fcf56e26a63a7da069b1b86c33b4246ee/demo.mp4 (branch alias may lag: https://cdn.jsdelivr.net/gh/w1nter625/paywatch@gh-pages/demo.mp4) |
 | Logo | Likely | `logo.png` (square) |
 | Cover / banner | Sometimes | `cover.png` (16:9) |
 | Website | Optional | repo URL |

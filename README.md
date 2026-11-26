@@ -4,7 +4,7 @@ A personal large-transfer watchdog for the [Reactive Omni Buildathon](https://do
 
 If a watched wallet sends or receives an ERC-20 transfer at or above a threshold, a reactive contract on Lasna notices the `Transfer` log and requests a callback onto an `AlertBoard` on Ethereum Sepolia. No bot to keep online. You can leave it running.
 
-**Demo video (77 seconds, English narration + captions):** [jsDelivr](https://cdn.jsdelivr.net/gh/w1nter625/paywatch@5341053/demo.mp4)
+**Demo video (80 seconds, English narration + captions):** [jsDelivr](https://cdn.jsdelivr.net/gh/w1nter625/paywatch@c32c9c2fcf56e26a63a7da069b1b86c33b4246ee/demo.mp4)
 
 ## Why this is useful
 
