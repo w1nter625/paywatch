@@ -8,7 +8,7 @@ Team: solo, Wynnter (DoraHacks @wynnter)
 Repo: https://github.com/w1nter625/paywatch  
 Nothing below has been submitted. Do not post the video to YouTube or any social platform.
 
-Contracts are deployed on Ethereum Sepolia + Lasna. The origin transfer and Lasna `ThresholdHit` / `CallbackRequest` are on-chain (see tables below). The destination `AlertBoard` callback transaction had not been posted by the official Reactive signer as of 2026-11-24 23:02 SGT, so do not submit the BUIDL until that hash is filled in. Judging requires the full loop.
+Contracts are redeployed on Ethereum Sepolia + Lasna after a callback gas-limit fix. The full loop is on-chain (origin Transfer, Lasna `ThresholdHit` / `CallbackRequest`, and Sepolia `AlertRecorded` — see tables below). Judging requires these three hashes. This file is paste-ready; the BUIDL has not been submitted from this pass.
 
 ---
 
@@ -33,7 +33,7 @@ Branch alias (may lag jsDelivr cache for a few minutes): https://cdn.jsdelivr.ne
 
 (Do not paste a github.com or releases URL — DoraHacks rejects those as video links.)
 
-Local copy: `/workspace/competitions-2/reactive-paywatch/demo.mp4` (under three minutes, 1080p, H.264 + AAC, English `en-US-AndrewNeural` TTS, burned-in captions). No on-camera appearance. Slide-style walkthrough of the loop, authentication, and the passing Foundry suite. Updated after the live Sepolia + Lasna deploy, with real origin and reactive transaction hashes.
+Local copy: `/workspace/competitions-2/reactive-paywatch/demo.mp4` (under three minutes, 1080p, H.264 + AAC, English `en-US-AndrewNeural` TTS, burned-in captions). No on-camera appearance. Slide-style walkthrough of the loop, authentication, and the passing Foundry suite. Updated after the complete three-leg Sepolia + Lasna loop, with all three live transaction hashes.
 
 ### Logo / cover
 - Logo (1024×1024 PNG): `/workspace/competitions-2/reactive-paywatch/logo.png`  
@@ -53,17 +53,17 @@ Repository URL, or the static page in `web/index.html`. There is no separate hos
 | Contract | Chain | Address |
 |---|---|---|
 | MockUSD | Ethereum Sepolia (11155111) | `0x8BE488697F24bC49ffBDE035e1F3e6A6fc9227D8` |
-| PayWatchReactive | Lasna (5318007) | `0x4A87e098771e3F4713c80c7dcd2AC740C0fe9184` |
-| AlertBoard | Ethereum Sepolia (11155111) | `0x4644c437ff8cb069A68E08FdE8b2998D1A10A4c8` |
+| PayWatchReactive | Lasna (5318007) | `0x4644c437ff8cb069A68E08FdE8b2998D1A10A4c8` |
+| AlertBoard | Ethereum Sepolia (11155111) | `0x3638305409342f605c2D799DB3b5201d3648Fb47` |
 
 Testnet deployer (public address only): `0xe9229A666D0B9f213429c407Ff730A9287FCA96E`
 
 ### Transaction hashes — full loop
 | Leg | What to look for | Hash |
 |---|---|---|
-| Origin | Ethereum Sepolia `MockUSD.Transfer` of 250 pUSD (above the 100 cap) | `0xc75466d83608d3b1da65d19a9784c14e991e71d9ccffc416c04413a13212786f` |
-| Reactive | Lasna `PayWatchReactive.ThresholdHit` + `CallbackRequest` | `0x6e069f8117b128096ccb50bd7e06173f4282fc6f714386eefc1297aab9f868f0` |
-| Callback | Ethereum Sepolia `AlertBoard.AlertRecorded` (via callback proxy) | **pending** as of 2026-11-24 23:02 SGT |
+| Origin | Ethereum Sepolia `MockUSD.Transfer` of 250 pUSD (above the 100 cap) | `0x1e84dc2c55582d201af4727237ad0c84ebc8cef4f39ed502ecd14391bcbb73ff` |
+| Reactive | Lasna `PayWatchReactive.ThresholdHit` + `CallbackRequest` | `0xd9e9ae6cf21264224b7929bd00fc162e8231a8b548d0fcd9a7c366faf0deaa04` |
+| Callback | Ethereum Sepolia `AlertBoard.AlertRecorded` (via callback proxy) | `0x0dd4f36715848625b500a1a591e31ecf1d8d927c6264939c54e73cdbe1651ef1` |
 
 Explorers: https://sepolia.etherscan.io/ and https://lasna.reactscan.net/  
 Full tables, earlier mint-triggered react, and the `depositTo` reserve tx are in [demo-txs.md](demo-txs.md).
@@ -74,9 +74,9 @@ Full tables, earlier mint-triggered react, and the `depositTo` reserve tx are in
 
 **Who it is for.** Anyone who wants a personal cap on a wallet’s ERC-20 transfers — incoming or outgoing — and wants the alert to keep working after they close the laptop.
 
-**What we built.** PayWatch is a Set It and Forget It automation. A `PayWatchReactive` contract on Reactive Lasna subscribes to `Transfer` logs for a chosen token and wallet on Ethereum Sepolia (a supported origin/destination; Base Sepolia also works). If the amount is at or above a threshold you set, it requests a callback. `AlertBoard` on Base Sepolia records the event. The board accepts calls only from the official callback proxy, and only when the injected sender is the authorized reactive contract. Cooldown is in seconds (`block.timestamp`), as required on 200 ms Base Sepolia blocks.
+**What we built.** PayWatch is a Set It and Forget It automation. A `PayWatchReactive` contract on Reactive Lasna subscribes to `Transfer` logs for a chosen token and wallet on Ethereum Sepolia (a supported origin/destination; Base Sepolia also works). If the amount is at or above a threshold you set, it requests a callback. `AlertBoard` on Ethereum Sepolia records the event. The board accepts calls only from the official callback proxy, and only when the injected sender is the authorized reactive contract. Cooldown is in seconds (`block.timestamp`), as required on fast testnets. `CALLBACK_GAS_LIMIT` is 2,500,000 so `recordAlert` covers 2026 Sepolia storage gas (~110k per cold SSTORE) after the proxy's overhead.
 
-**How it works.** The demo deploys a 6-decimal `MockUSD` (pUSD) so the full loop can be shown without a faucet-issued stablecoin. In production the same subscriber points at USDC or any other ERC-20. Deployment order follows the official docs: reactive contract first (it needs the token address), then the board (it needs the reactive address), then `setBoard`. The Foundry suite etches a mock system contract and covers subscribe-on-construct, incoming and outgoing hits, below-threshold / wrong-token / unwatched-wallet filters, cooldown, `onlySystem` / `onlyOwner`, no callback until the board is set, and AlertBoard authentication (14/14 passing).
+**How it works.** The demo deploys a 6-decimal `MockUSD` (pUSD) so the full loop can be shown without a faucet-issued stablecoin. In production the same subscriber points at USDC or any other ERC-20. Deployment order follows the official docs: reactive contract first (it needs the token address), then the board (it needs the reactive address), then `setBoard`. The Foundry suite etches a mock system contract and covers subscribe-on-construct, incoming and outgoing hits, below-threshold / wrong-token / unwatched-wallet filters, cooldown, `onlySystem` / `onlyOwner`, no callback until the board is set, and AlertBoard authentication (15/15 passing).
 
 **On-chain proof.** After testnet funding, `./scripts/deploy.sh` and `./scripts/demo.sh` produce the three hashes above: origin transfer, reactive `ThresholdHit`, and `AlertRecorded` callback.
 
@@ -95,7 +95,7 @@ Inferred from DoraHacks public docs (default BUIDL form) and from this event’s
 
 1. Sign in to DoraHacks as **@wynnter** (existing account). Connect GitHub `w1nter625` if the form offers it.
 2. Open https://dorahacks.io/hackathon/reactive-omni-buildathon and click **Register** / **Join** if not already registered.
-3. Click **Submit BUIDL** → **Create new BUIDL** (do not reuse another project). Wait until the address and hash tables above are filled.
+3. Click **Submit BUIDL** → **Create new BUIDL** (do not reuse another project). Addresses and all three loop hashes are filled in above. Submit only when ready; this pass did not open the BUIDL form.
 
 **Typical required or expected BUIDL fields**
 

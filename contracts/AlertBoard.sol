@@ -2,7 +2,8 @@
 pragma solidity ^0.8.29;
 
 /// @notice Destination-chain board that records large-transfer alerts.
-/// @dev Lives on Base Sepolia. Only the Reactive callback proxy may call
+/// @dev Lives on the destination chain (live demo: Ethereum Sepolia).
+///      Only the Reactive callback proxy may call
 ///      `recordAlert`, and only on behalf of the authorized reactive contract.
 contract AlertBoard {
     address public immutable callbackProxy;

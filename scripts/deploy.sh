@@ -23,7 +23,7 @@ if [[ "$ORIGIN" == "base" ]]; then
   CALLBACK_PROXY=0x476F44b11F5C942c58f4c8E3d0300E5710743585
 else
   ORIGIN_NAME="Ethereum Sepolia"
-  ORIGIN_RPC="${ORIGIN_RPC:-${SEPOLIA_RPC:-https://ethereum-sepolia.publicnode.com}}"
+  ORIGIN_RPC="${ORIGIN_RPC:-${SEPOLIA_RPC:-https://ethereum-sepolia-rpc.publicnode.com}}"
   ORIGIN_CHAIN_ID=11155111
   CALLBACK_PROXY=0xAa14d9Cd0f788Ca23d11805986C1d8bd035D23b4
 fi
@@ -33,11 +33,15 @@ echo "Origin / destination: $ORIGIN_NAME ($ORIGIN_CHAIN_ID)  rpc=$ORIGIN_RPC"
 echo "Callback proxy: $CALLBACK_PROXY"
 echo "Lasna rpc: $LASNA_RPC"
 
-echo "==> MockUSD on $ORIGIN_NAME"
-MOCK_OUT=$(forge create contracts/MockUSD.sol:MockUSD \
-  --broadcast --rpc-url "$ORIGIN_RPC" --private-key "$PRIVATE_KEY" --chain-id "$ORIGIN_CHAIN_ID")
-echo "$MOCK_OUT"
-MOCK_USD=$(echo "$MOCK_OUT" | awk '/Deployed to:/ {print $3}')
+if [[ -n "${MOCK_USD:-}" ]]; then
+  echo "==> Reusing MockUSD $MOCK_USD"
+else
+  echo "==> MockUSD on $ORIGIN_NAME"
+  MOCK_OUT=$(forge create contracts/MockUSD.sol:MockUSD \
+    --broadcast --rpc-url "$ORIGIN_RPC" --private-key "$PRIVATE_KEY" --chain-id "$ORIGIN_CHAIN_ID")
+  echo "$MOCK_OUT"
+  MOCK_USD=$(echo "$MOCK_OUT" | awk '/Deployed to:/ {print $3}')
+fi
 echo "MockUSD: $MOCK_USD"
 
 echo "==> PayWatchReactive on Lasna"
@@ -68,9 +72,9 @@ echo "$SETBOARD_OUT"
 # blocks delivery (InDebt). depositTo settles debt then credits reserves.
 echo "==> depositTo callback reserves on $ORIGIN_NAME"
 DEPOSIT_OUT=$(cast send "$CALLBACK_PROXY" "depositTo(address)" "$BOARD" \
-  --value 0.01ether --rpc-url "$ORIGIN_RPC" --private-key "$PRIVATE_KEY" || true)
+  --value 0.01ether --gas-limit 400000 --rpc-url "$ORIGIN_RPC" --private-key "$PRIVATE_KEY")
 echo "$DEPOSIT_OUT"
-echo -n "AlertBoard debt: "; cast call "$CALLBACK_PROXY" "debt(address)(uint256)" "$BOARD" --rpc-url "$ORIGIN_RPC" || true
+echo -n "AlertBoard debt: "; cast call "$CALLBACK_PROXY" "debts(address)(uint256)" "$BOARD" --rpc-url "$ORIGIN_RPC" || true
 echo -n "AlertBoard reserves: "; cast call "$CALLBACK_PROXY" "reserves(address)(uint256)" "$BOARD" --rpc-url "$ORIGIN_RPC" || true
 
 mkdir -p "$ROOT/broadcast"

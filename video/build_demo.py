@@ -51,17 +51,17 @@ NARRATION = [
     (
         "board",
         "board",
-        "An AlertBoard on Base Sepolia records the event. Only the official callback proxy can write it, and only on behalf of the authorized reactive contract.",
+        "An AlertBoard on Ethereum Sepolia records the event. Only the official callback proxy can write it, and only on behalf of the authorized reactive contract.",
     ),
     (
         "tests",
         "tests",
-        "The Foundry suite covers subscribe on construct, incoming and outgoing hits, below-threshold noise, cooldown, and AlertBoard authentication. Fourteen tests, all passing.",
+        "The Foundry suite covers subscribe on construct, incoming and outgoing hits, below-threshold noise, cooldown, AlertBoard authentication, and the callback gas limit. Fifteen tests, all passing.",
     ),
     (
         "demo",
         "demo",
-        "In the live testnet demo, we mint mock dollars and send two hundred and fifty, above a one hundred cap. The origin Transfer and the Lasna ThresholdHit are already on-chain, and the reactive contract has requested the callback.",
+        "In the live testnet demo, we send two hundred and fifty mock dollars, above a one hundred cap. The origin Transfer, the Lasna ThresholdHit, and the Sepolia AlertRecorded callback all landed on-chain, about twelve seconds apart.",
     ),
     (
         "close",
@@ -266,7 +266,7 @@ def frame_board() -> Image.Image:
 
 def frame_tests() -> Image.Image:
     im, d = new_canvas()
-    header(d, "FOUNDRY  ·  14 / 14")
+    header(d, "FOUNDRY  ·  15 / 15")
     rounded_rect(d, [80, 140, 1840, 980], (10, 14, 22), outline=LINE, width=2, radius=20)
     d.ellipse([110, 168, 132, 190], fill=(255, 95, 86))
     d.ellipse([148, 168, 170, 190], fill=(255, 189, 46))
@@ -277,6 +277,7 @@ def frame_tests() -> Image.Image:
         "test_alertBoardRejectsNonProxy",
         "test_alertBoardRejectsWrongReactive",
         "test_belowThresholdIgnored",
+        "test_callbackGasLimitCoversSepoliaStorage",
         "test_constructorSubscribes",
         "test_cooldownSuppressesSecondFire",
         "test_mockUsdTransferEmitsAndMovesBalance",
@@ -289,14 +290,15 @@ def frame_tests() -> Image.Image:
         "test_wrongTokenIgnored",
     ]
     col_w = 840
+    left = 8
     for i, name in enumerate(tests):
-        col = 0 if i < 7 else 1
-        row = i if i < 7 else i - 7
+        col = 0 if i < left else 1
+        row = i if i < left else i - left
         x = 120 + col * col_w
-        y = 230 + row * 90
-        d.text((x, y), "[PASS]", fill=OK, font=font_mono(24, bold=True))
-        d.text((x + 130, y), name, fill=WHITE, font=font_mono(22))
-    d.text((120, 900), "Suite result: ok.  14 passed;  0 failed;  0 skipped.", fill=OK, font=font_mono(24, bold=True))
+        y = 220 + row * 80
+        d.text((x, y), "[PASS]", fill=OK, font=font_mono(22, bold=True))
+        d.text((x + 130, y), name, fill=WHITE, font=font_mono(20))
+    d.text((120, 900), "Suite result: ok.  15 passed;  0 failed;  0 skipped.", fill=OK, font=font_mono(24, bold=True))
     return im
 
 
@@ -304,10 +306,10 @@ def frame_demo() -> Image.Image:
     im, d = new_canvas()
     header(d, "DEMO LOOP")
     steps = [
-        ("1", "Mint 1,000 pUSD", "to the watched wallet\non Ethereum Sepolia"),
-        ("2", "Transfer 250 pUSD", "above the 100 cap\nemits Transfer"),
-        ("3", "ThresholdHit", "PayWatchReactive\nemits on Lasna"),
-        ("4", "Callback requested", "AlertBoard on\nEthereum Sepolia"),
+        ("1", "Transfer 250 pUSD", "above the 100 cap\non Ethereum Sepolia"),
+        ("2", "ThresholdHit", "PayWatchReactive\nemits on Lasna"),
+        ("3", "Callback requested", "gasLimit 2,500,000\nvia system contract"),
+        ("4", "AlertRecorded", "AlertBoard on\nEthereum Sepolia"),
     ]
     x = 60
     for i, (num, title, body) in enumerate(steps):
@@ -324,10 +326,11 @@ def frame_demo() -> Image.Image:
         if i < 3:
             d.polygon([(x + 436, 470), (x + 468, 496), (x + 436, 522)], fill=AMBER)
         x += 470
-    d.text((80, 820), "Origin Transfer  →  Lasna ThresholdHit  →  callback requested", fill=CYAN, font=font(26))
-    d.text((80, 870), "Origin   0xc75466d83608d3b1da65d19a9784c14e991e71d9ccffc416c04413a13212786f", fill=WHITE, font=font_mono(18))
-    d.text((80, 910), "Reactive 0x6e069f8117b128096ccb50bd7e06173f4282fc6f714386eefc1297aab9f868f0", fill=WHITE, font=font_mono(18))
-    d.text((80, 950), "Callback pending on the official Sepolia signer  ·  see demo-txs.md", fill=DIM, font=font(20))
+    d.text((80, 800), "Origin Transfer  →  Lasna ThresholdHit  →  Sepolia AlertRecorded", fill=CYAN, font=font(26))
+    d.text((80, 850), "Origin    0x1e84dc2c55582d201af4727237ad0c84ebc8cef4f39ed502ecd14391bcbb73ff", fill=WHITE, font=font_mono(18))
+    d.text((80, 890), "Reactive  0xd9e9ae6cf21264224b7929bd00fc162e8231a8b548d0fcd9a7c366faf0deaa04", fill=WHITE, font=font_mono(18))
+    d.text((80, 930), "Callback  0x0dd4f36715848625b500a1a591e31ecf1d8d927c6264939c54e73cdbe1651ef1", fill=WHITE, font=font_mono(18))
+    d.text((80, 980), "Landed 2026-11-26 10:09–10:10 SGT  ·  alertCount = 1", fill=OK, font=font(20))
     return im
 
 

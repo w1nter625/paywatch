@@ -5,7 +5,7 @@ import {ISystemContract} from "./ISystemContract.sol";
 
 /// @notice Lasna reactive contract: if a watched wallet's ERC-20 Transfer is
 ///         at or above a threshold, request a callback that records it on
-///         AlertBoard (Base Sepolia).
+///         AlertBoard (destination chain, live demo: Ethereum Sepolia).
 /// @dev "Set It and Forget It" track. The useful automation is a personal
 ///      large-movement watchdog you can leave running. Demo origin is MockUSD;
 ///      the same subscriber works against any ERC-20 Transfer log, including
@@ -22,7 +22,15 @@ contract PayWatchReactive {
     uint256 public constant TRANSFER_TOPIC0 =
         0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
 
-    uint64 public constant CALLBACK_GAS_LIMIT = 1_000_000;
+    /// @dev Must cover destination `recordAlert` after the callback proxy
+    ///      withholds `_extraGas` (150k) + `_maxChargeGas` (50k) and keeps a
+    ///      further slice for settlement. On 2026 Sepolia a cold SSTORE is
+    ///      ~110k gas, so writing AlertBoard's 8-field struct plus `alertCount`
+    ///      costs ~887k. A 1_000_000 gasLimit only forwards ~745k and OOGs,
+    ///      which the proxy reports as CallbackFailure. 2_500_000 forwards
+    ///      roughly 1.86M, enough with margin. Official examples use 1M or
+    ///      500k; live Omni requests on Lasna also use up to 3M.
+    uint64 public constant CALLBACK_GAS_LIMIT = 2_500_000;
 
     address public immutable owner;
     uint256 public immutable originChainId;

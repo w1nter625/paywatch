@@ -227,6 +227,12 @@ contract PayWatchTest is Test {
         );
     }
 
+    function test_callbackGasLimitCoversSepoliaStorage() public view {
+        // 2026 Sepolia cold SSTORE is ~110k; recordAlert needs ~887k after
+        // proxy overhead, so 1_000_000 is not enough. See CALLBACK_GAS_LIMIT.
+        assertGe(watch.CALLBACK_GAS_LIMIT(), 2_500_000);
+    }
+
     function test_mockUsdTransferEmitsAndMovesBalance() public {
         token.mint(watched, 500e6);
         vm.prank(watched);

@@ -1,64 +1,66 @@
 # PayWatch live testnet transactions
 
-Recorded 2026-11-24, times in **SGT (UTC+8)**. Origin and destination are **Ethereum Sepolia** (chain 11155111), which is a supported Reactive testnet pair. The reactive contract is on **Lasna** (5318007).
+Recorded **2026-11-26**, times in **SGT (UTC+8)**. Origin and destination are **Ethereum Sepolia** (chain 11155111). The reactive contract is on **Lasna** (5318007).
 
 The Set It and Forget It track allows any chain Reactive supports. Ethereum Sepolia was used so the 0.055 Sepolia ETH faucet drop did not have to be bridged to Base Sepolia.
+
+This is the **second deploy**. The first (2026-11-24) requested callbacks correctly, but `recordAlert` ran out of gas on the destination (see below). These addresses and hashes supersede that deploy.
 
 ## Contracts
 
 | Contract | Chain | Address | Deploy tx |
 |---|---|---|---|
-| MockUSD | Ethereum Sepolia | [`0x8BE488697F24bC49ffBDE035e1F3e6A6fc9227D8`](https://sepolia.etherscan.io/address/0x8BE488697F24bC49ffBDE035e1F3e6A6fc9227D8) | [`0x3e11aa1d…55dce1d`](https://sepolia.etherscan.io/tx/0x3e11aa1dc64afe77ddbce371318130578f65a8a3ade85ba050fcb06b355dce1d) |
-| PayWatchReactive | Lasna | [`0x4A87e098771e3F4713c80c7dcd2AC740C0fe9184`](https://lasna.reactscan.net/address/0x4A87e098771e3F4713c80c7dcd2AC740C0fe9184) | [`0x0cf38995…94b4ab7d`](https://lasna.reactscan.net/tx/0x0cf389959c4eabf6147a0d3e707cbab73ae3a7613b72d5821f64433294b4ab7d) |
-| AlertBoard | Ethereum Sepolia | [`0x4644c437ff8cb069A68E08FdE8b2998D1A10A4c8`](https://sepolia.etherscan.io/address/0x4644c437ff8cb069A68E08FdE8b2998D1A10A4c8) | [`0xc8462587…9cef88d`](https://sepolia.etherscan.io/tx/0xc8462587c32d8d1e90a8048a740b169190abb157c35957c2f1de56c1b9cef88d) |
+| MockUSD (reused) | Ethereum Sepolia | [`0x8BE488697F24bC49ffBDE035e1F3e6A6fc9227D8`](https://sepolia.etherscan.io/address/0x8BE488697F24bC49ffBDE035e1F3e6A6fc9227D8) | [`0x3e11aa1d…55dce1d`](https://sepolia.etherscan.io/tx/0x3e11aa1dc64afe77ddbce371318130578f65a8a3ade85ba050fcb06b355dce1d) |
+| PayWatchReactive | Lasna | [`0x4644c437ff8cb069A68E08FdE8b2998D1A10A4c8`](https://lasna.reactscan.net/address/0x4644c437ff8cb069A68E08FdE8b2998D1A10A4c8) | [`0x94b1c9be…32c3b0`](https://lasna.reactscan.net/tx/0x94b1c9becec7cbf541f2c52ecf26bee8b9cd0ab142e3d1107d9321b7f632c3b0) (10:08:34 SGT) |
+| AlertBoard | Ethereum Sepolia | [`0x3638305409342f605c2D799DB3b5201d3648Fb47`](https://sepolia.etherscan.io/address/0x3638305409342f605c2D799DB3b5201d3648Fb47) | [`0x252881e0…8eb03a`](https://sepolia.etherscan.io/tx/0x252881e08a7a011f1519e338557b67a51b7da749727a5109cebea10f1b8eb03a) (10:08:48 SGT) |
 
 - Deployer / watched wallet: `0xe9229A666D0B9f213429c407Ff730A9287FCA96E`
 - Sepolia callback proxy: `0xAa14d9Cd0f788Ca23d11805986C1d8bd035D23b4`
 - Threshold: 100 pUSD (6 decimals). Cooldown: 60 seconds.
-- `setBoard`: [`0x0beefdd3abbcd0da84a4fa183e0a7d0fe05a19b92ad08ac4da31195ba5084993`](https://lasna.reactscan.net/tx/0x0beefdd3abbcd0da84a4fa183e0a7d0fe05a19b92ad08ac4da31195ba5084993)
+- `CALLBACK_GAS_LIMIT`: **2,500,000** (raised from 1,000,000 after the first deploy ran out of gas).
+- `setBoard`: [`0x3ffeaf18faea1149cb8e1c3d6716dd30487b028e9c9f1fb35ced9e5305754e4c`](https://lasna.reactscan.net/tx/0x3ffeaf18faea1149cb8e1c3d6716dd30487b028e9c9f1fb35ced9e5305754e4c) (10:08:51 SGT)
+- `depositTo` reserves (0.01 ETH, `debt = 0`, `reserves = 0.01 ETH`): [`0xe87dac75eea1c5f6b0029d89938136da353071451a8593ce85e0bb7f93ca8c1f`](https://sepolia.etherscan.io/tx/0xe87dac75eea1c5f6b0029d89938136da353071451a8593ce85e0bb7f93ca8c1f) (10:09:00 SGT)
 
-Full hashes:
+Full deploy hashes:
 
 - MockUSD deploy: `0x3e11aa1dc64afe77ddbce371318130578f65a8a3ade85ba050fcb06b355dce1d`
-- PayWatchReactive deploy: `0x0cf389959c4eabf6147a0d3e707cbab73ae3a7613b72d5821f64433294b4ab7d`
-- AlertBoard deploy: `0xc8462587c32d8d1e90a8048a740b169190abb157c35957c2f1de56c1b9cef88d`
+- PayWatchReactive deploy: `0x94b1c9becec7cbf541f2c52ecf26bee8b9cd0ab142e3d1107d9321b7f632c3b0`
+- AlertBoard deploy: `0x252881e08a7a011f1519e338557b67a51b7da749727a5109cebea10f1b8eb03a`
+
+Note: the new Lasna PayWatchReactive address is coincidentally the same 20 bytes as the *first* Sepolia AlertBoard (`0x4644…A4c8`). They live on different chains. Do not confuse them with the superseded first-deploy AlertBoard.
 
 ## Official lREACT
 
 - Sent 0.01 Sepolia ETH via `request(address)` to `0x9b9BB25f1A81078C544C829c5EB7822d747Cf434`
 - Tx: [`0x23a823cd1e3df94dfc83cc11af1a108e38e3412aafb30851dd6272f11279557c`](https://sepolia.etherscan.io/tx/0x23a823cd1e3df94dfc83cc11af1a108e38e3412aafb30851dd6272f11279557c)
-- Received **1.05 lREACT** on Lasna (rate 1 ETH → 100 lREACT).
+- Received **1.05 lREACT** on Lasna (rate 1 ETH → 100 lREACT). The second PayWatch constructor was funded from the remaining wallet balance (~0.92 lREACT).
 
-## The loop (primary demo)
+## The loop (complete)
 
-Outgoing 250 pUSD transfer from the watched wallet to `0x…dEaD`, after callback reserves were funded.
+Outgoing 250 pUSD transfer from the watched wallet to `0x…dEaD`, after callback reserves were funded and after `CALLBACK_GAS_LIMIT` was raised to 2,500,000.
 
-| Leg | Chain | What | Tx |
-|---|---|---|---|
-| Origin | Ethereum Sepolia | `MockUSD.Transfer` of 250 pUSD (above the 100 cap), watched wallet → `0x…dEaD` | [`0xc75466d83608d3b1da65d19a9784c14e991e71d9ccffc416c04413a13212786f`](https://sepolia.etherscan.io/tx/0xc75466d83608d3b1da65d19a9784c14e991e71d9ccffc416c04413a13212786f) |
-| Reactive | Lasna | `PayWatchReactive.ThresholdHit` + system `CallbackRequest` to AlertBoard | [`0x6e069f8117b128096ccb50bd7e06173f4282fc6f714386eefc1297aab9f868f0`](https://lasna.reactscan.net/tx/0x6e069f8117b128096ccb50bd7e06173f4282fc6f714386eefc1297aab9f868f0) |
-| Callback | Ethereum Sepolia | `AlertBoard.AlertRecorded` via the official callback proxy | **pending** as of 2026-11-24 23:02 SGT |
+| Leg | Chain | What | Time (SGT) | Tx |
+|---|---|---|---|---|
+| Origin | Ethereum Sepolia | `MockUSD.Transfer` of 250 pUSD (above the 100 cap), watched wallet → `0x…dEaD` | 2026-11-26 10:09:48 | [`0x1e84dc2c55582d201af4727237ad0c84ebc8cef4f39ed502ecd14391bcbb73ff`](https://sepolia.etherscan.io/tx/0x1e84dc2c55582d201af4727237ad0c84ebc8cef4f39ed502ecd14391bcbb73ff) |
+| Reactive | Lasna | `PayWatchReactive.ThresholdHit` + system `CallbackRequest` to AlertBoard | 2026-11-26 10:09:47 | [`0xd9e9ae6cf21264224b7929bd00fc162e8231a8b548d0fcd9a7c366faf0deaa04`](https://lasna.reactscan.net/tx/0xd9e9ae6cf21264224b7929bd00fc162e8231a8b548d0fcd9a7c366faf0deaa04) |
+| Callback | Ethereum Sepolia | `AlertBoard.AlertRecorded` (id 1) via the official callback proxy | 2026-11-26 10:10:00 | [`0x0dd4f36715848625b500a1a591e31ecf1d8d927c6264939c54e73cdbe1651ef1`](https://sepolia.etherscan.io/tx/0x0dd4f36715848625b500a1a591e31ecf1d8d927c6264939c54e73cdbe1651ef1) |
 
-`fireCount` on Lasna is **2**. `AlertBoard.alertCount` on Sepolia is still **0**. `getCallbacks` for the reactive tx is still `[]`, and Etherscan shows no transaction on AlertBoard besides its deploy. The Reactive signer has not yet posted the destination transaction.
+The Lasna clock is about one second ahead of Sepolia; the destination transaction landed in the next Sepolia block, **12 seconds** after the origin transfer. `fireCount = 1`, `alertCount = 1`, proxy `debt = 0`. `alerts(1)` stores the watched wallet, `0x…dEaD`, MockUSD, 250 pUSD, `incoming = false`, chain 11155111, and the origin tx hash above.
 
-### Why the first callback could not land, and what was fixed
+Callback transaction gas used: **954,481**. That is more than the ~745k the proxy forwards from a 1,000,000 `gasLimit`, which is why the first deploy failed.
 
-ETH sent to AlertBoard in the constructor sits on the contract as a plain balance. Callback fees are billed from **reserves** on the callback proxy. Any **debt > 0** blocks delivery (`InDebt`). After the first react, the proxy showed a small debt (`17148393` wei) and zero reserves.
+## Why the first deploy's callbacks failed (2026-11-24)
 
-`depositTo(AlertBoard)` on the Sepolia callback proxy cleared the debt and credited ~0.01 ETH of reserves:
+The first contracts were:
 
-- [`0x6b3f2fbeed12362841ed1c6ce6326487411998e0bc00a24cfe8f651b5ccd24da`](https://sepolia.etherscan.io/tx/0x6b3f2fbeed12362841ed1c6ce6326487411998e0bc00a24cfe8f651b5ccd24da)
-- After this: `debt = 0`, `reserves ≈ 0.01 ETH`.
+- PayWatchReactive (Lasna): `0x4A87e098771e3F4713c80c7dcd2AC740C0fe9184`
+- AlertBoard (Ethereum Sepolia): `0x4644c437ff8cb069A68E08FdE8b2998D1A10A4c8`
 
-The primary demo transfer above was sent *after* that deposit. Lasna still reacted (`ThresholdHit` + `CallbackRequest`, `fireCount = 2`). Destination delivery was still outstanding more than eight minutes later. Other public write-ups of this buildathon saw Sepolia callbacks land in about 10 seconds, so this looks like a signer/queue delay rather than a lack of testnet ETH. Deployer still holds ~0.033 Sepolia ETH and ~0.92 lREACT.
+Payload format, official proxy, chain ID, and authorization (injected sender = the reactive contract, RvmId `0x0` on Omni) were all correct. Reserves were funded after the first request. The official signer **did** post destination transactions, about one Sepolia block later — they were easy to miss because they go to the **callback proxy**, not to AlertBoard as the top-level `to`:
 
-`scripts/deploy.sh` now calls `depositTo` after `setBoard`.
+- First attempt (before reserves; went into debt): [`0x09c086f266f315097e2a43a1d240037597320ebcfce43e37766b8b1b557cdd18`](https://sepolia.etherscan.io/tx/0x09c086f266f315097e2a43a1d240037597320ebcfce43e37766b8b1b557cdd18)
+- Second attempt (after `depositTo`): [`0xf7b5899b8518ed4c4c0121f9e176989dd83ca26eb266e96dbd7e272a2c304da6`](https://sepolia.etherscan.io/tx/0xf7b5899b8518ed4c4c0121f9e176989dd83ca26eb266e96dbd7e272a2c304da6)
 
-## Earlier origin event (same contracts)
+Both emitted `CallbackFailure`. A call trace of the second transaction shows the proxy called `recordAlert` with the correct injected reactive address and then **ran out of gas** (`gas=0xb5d4f` / 744,783 forwarded, all consumed). On 2026 Sepolia a cold `SSTORE` costs ~110,000 gas, so writing `alertCount` plus the 8-field `Alert` struct costs ~887,000 gas. Official Getting Started examples still use a 1,000,000 `gasLimit`; after the proxy withholds `_extraGas` (150k) + `_maxChargeGas` (50k) and settlement, only ~745k reaches the board.
 
-The first `ThresholdHit` was triggered by minting 1,000 pUSD to the watched wallet (incoming, also above the cap), at 22:44:36 SGT, *before* reserves were funded:
-
-| Leg | Tx |
-|---|---|
-| Origin mint `Transfer` | [`0x69edc6c688bdfc270a621f48f3010e3a1a8231ec7d5b31d3e01a5286b0b63984`](https://sepolia.etherscan.io/tx/0x69edc6c688bdfc270a621f48f3010e3a1a8231ec7d5b31d3e01a5286b0b63984) |
-| Lasna `ThresholdHit` + `CallbackRequest` | [`0x24307e71da4ae2ce6f5f3d21fa154772a801ecb7d696b5e4d0969bc0cebfc7b6`](https://lasna.reactscan.net/tx/0x24307e71da4ae2ce6f5f3d21fa154772a801ecb7d696b5e4d0969bc0cebfc7b6) |
+The fix was to redeploy PayWatch with `CALLBACK_GAS_LIMIT = 2,500,000` (forwards roughly 1.86M) and a new AlertBoard whose immutable `reactive` points at that contract, then `depositTo` 0.01 ETH of reserves before the demo transfer.

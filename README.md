@@ -2,7 +2,7 @@
 
 A personal large-transfer watchdog for the [Reactive Omni Buildathon](https://dorahacks.io/hackathon/reactive-omni-buildathon), **Set It and Forget It** track.
 
-If a watched wallet sends or receives an ERC-20 transfer at or above a threshold, a reactive contract on Lasna notices the `Transfer` log and requests a callback onto an `AlertBoard` on Base Sepolia. No bot to keep online. You can leave it running.
+If a watched wallet sends or receives an ERC-20 transfer at or above a threshold, a reactive contract on Lasna notices the `Transfer` log and requests a callback onto an `AlertBoard` on Ethereum Sepolia. No bot to keep online. You can leave it running.
 
 **Demo video (77 seconds, English narration + captions):** [jsDelivr](https://cdn.jsdelivr.net/gh/w1nter625/paywatch@5341053/demo.mp4)
 
@@ -13,7 +13,7 @@ People already screenshot “did this payment land?” or run a watcher script t
 ## The loop
 
 ```
-Base Sepolia                         Lasna                         Base Sepolia
+Ethereum Sepolia                     Lasna                         Ethereum Sepolia
 MockUSD.Transfer  ─────────────────► PayWatchReactive.react()
   (watched wallet, amount ≥ cap)           │
                                            └── requestCallbackV_1_0 ──► AlertBoard.recordAlert
@@ -44,11 +44,11 @@ Live testnet addresses and transaction hashes are in [demo-txs.md](demo-txs.md).
 forge test -vv
 ```
 
-The suite etches a mock system contract at `0x8888…8888` and covers: subscribe on construct, incoming and outgoing hits, below-threshold / wrong token / unwatched wallet, cooldown, `onlySystem` / `onlyOwner`, no callback until the board is set, and AlertBoard authentication. **14/14 passing.**
+The suite etches a mock system contract at `0x8888…8888` and covers: subscribe on construct, incoming and outgoing hits, below-threshold / wrong token / unwatched wallet, cooldown, `onlySystem` / `onlyOwner`, no callback until the board is set, and AlertBoard authentication. **15/15 passing.**
 
 ## Deploy (testnet)
 
-Needs Base Sepolia ETH and Lasna `lREACT`. Official docs: [Reactive Mainnet / Lasna Testnet](https://dev.reactive.network/reactive-mainnet). There is no official login-free drip of lREACT by itself. You first obtain Sepolia or Base Sepolia test ETH from a public faucet, then mint lREACT by sending that test ETH to a faucet contract (plain value transfer or `request(address)`):
+Needs Ethereum Sepolia ETH (or Base Sepolia ETH if you set `ORIGIN=base`) and Lasna `lREACT`. Official docs: [Reactive Mainnet / Lasna Testnet](https://dev.reactive.network/reactive-mainnet). There is no official login-free drip of lREACT by itself. You first obtain Sepolia or Base Sepolia test ETH from a public faucet, then mint lREACT by sending that test ETH to a faucet contract (plain value transfer or `request(address)`):
 
 - Ethereum Sepolia: `0x9b9BB25f1A81078C544C829c5EB7822d747Cf434`
 - Base Sepolia: `0x2afaFD298b23b62760711756088F75B7409f5967`

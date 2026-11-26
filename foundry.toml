@@ -12,4 +12,4 @@ fs_permissions = [{ access = "read", path = "./"}]
 [rpc_endpoints]
 lasna = "https://reactive-lasna.rpcscan.xyz"
 base_sepolia = "https://sepolia.base.org"
-sepolia = "https://ethereum-sepolia.publicnode.com"
+sepolia = "https://ethereum-sepolia-rpc.publicnode.com"
